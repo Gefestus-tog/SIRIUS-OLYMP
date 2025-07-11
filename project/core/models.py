@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Place(models.Model):
@@ -38,6 +38,14 @@ class Place(models.Model):
         verbose_name="Address",
         unique=True
     )
+    lat = models.FloatField(verbose_name='Lat',
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(-90), MaxValueValidator(90)])  
+    lng = models.FloatField(verbose_name='Lng',
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(-180), MaxValueValidator(180)])  
     description = models.TextField(
         verbose_name="Description",
         blank=True
