@@ -434,24 +434,46 @@ async function addMarkerByAddress(address, title, description, center = true, ne
     }
 
     if (new_place) {
-        try{
-            let data = {
-                address: address,
-                name: title,
-                description: description,
-                category: 'other',
-                lat: result.lat,
-                lng: result.lon
-        }
-        axios.post('http://localhost:8000/api/places/add/', data, {
-       headers: {
-           'Content-Type': 'application/json'
-       }
-   })
-        }
-        catch(error){
+        try {
+            // Создаем FormData для отправки данных формы
+            const formData = new FormData();
+            formData.append('name', title);
+            formData.append('address', address);
+            formData.append('description', description);
+            formData.append('category', 'Other');
+            formData.append('lat', result.lat);
+            formData.append('lng', result.lon);
+            
+            const response = await axios.post('http://localhost:8000/api/places/add/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            
+            if (response.data.success) {
+                console.log('Место успешно добавлено:', response.data);
+                alert('Место успешно добавлено!');
+            } else {
+                console.error('Ошибка при добавлении места:', response.data.errors);
+                let errorMessage = 'Ошибка при добавлении места:\n';
+                for (const field in response.data.errors) {
+                    errorMessage += `${field}: ${response.data.errors[field].join(', ')}\n`;
+                }
+                alert(errorMessage);
+            }
+        } catch(error) {
             console.error('Ошибка добавления места:', error);
-            alert('Не удалось добавить место: ' + error.message);
+            if (error.response && error.response.data && error.response.data.errors) {
+                let errorMessage = 'Ошибка при добавлении места:\n';
+                for (const field in error.response.data.errors) {
+                    errorMessage += `${field}: ${error.response.data.errors[field].join(', ')}\n`;
+                }
+                alert(errorMessage);
+            } else if (error.response && error.response.data) {
+                alert('Не удалось добавить место: ' + JSON.stringify(error.response.data));
+            } else {
+                alert('Не удалось добавить место: ' + error.message);
+            }
         }
     }
 }

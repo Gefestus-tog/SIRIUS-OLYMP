@@ -68,11 +68,23 @@ def place_add(request):
     authentication_classes = []  # Отключаем аутентификацию
     permission_classes = []     # Отключаем проверку прав
     if request.method == 'POST':
+        print("POST data:", request.POST)
+        print("FILES data:", request.FILES)
+        
+        # Проверяем, существует ли уже место с таким адресом
+        address = request.POST.get('address')
+        if address and Place.objects.filter(address=address).exists():
+            return JsonResponse({
+                'success': False, 
+                'errors': {'address': ['Место с таким адресом уже существует.']}
+            }, status=400)
+        
         form = PlaceForm(request.POST, request.FILES)
         if form.is_valid():
             place = form.save()
             return JsonResponse({'success': True, 'place_id': place.id})
         else:
+            print("Form errors:", form.errors)
             return JsonResponse({'success': False, 'errors': form.errors}, status=400)
     return HttpResponseBadRequest('Only POST allowed')
 
