@@ -13,6 +13,7 @@ class Place(models.Model):
     CINEMA = 'Cinema'
     GALLERY = 'Gallery'
     HOTEL = 'Hotel'
+    PARK = 'Park'
     OTHER = 'Other'
 
     CATEGORYS = [
@@ -25,6 +26,7 @@ class Place(models.Model):
         (CINEMA, 'Кинотеатры'),
         (GALLERY, 'Галереи'),
         (HOTEL, 'Отели'),
+        (PARK, 'Парки'),
         (OTHER, 'Другие места'),
     ]
 
