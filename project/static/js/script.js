@@ -431,6 +431,11 @@ async function addMarker() {
     const category = DOM.markerCategory.value;
     const photoFile = DOM.fileInput.files[0];
     
+    DOM.addressInput.value = ''
+    DOM.markerTitle.value = ''
+    DOM.markerDescription.value = ''
+    DOM.markerCategory.value = 'Other'
+
     // Валидация
     if (!address || !title || !category) {
         alert('Заполните обязательные поля: адрес, название и категория');
