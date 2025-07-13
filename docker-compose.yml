@@ -4,7 +4,7 @@ services:
   web:
     build: .
     container_name: sirius-django
-    command: /app/entrypoint.sh
+    entrypoint: ["/bin/bash", "/app/entrypoint.sh"]
     volumes:
       - ./project:/app/project
       - ./requirements.txt:/app/requirements.txt
